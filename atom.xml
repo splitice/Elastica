@@ -4,7 +4,7 @@
   <title><![CDATA[Elastica]]></title>
   <link href="http://Elastica.io/atom.xml" rel="self"/>
   <link href="http://Elastica.io/"/>
-  <updated>2014-03-02T12:16:18+01:00</updated>
+  <updated>2014-03-02T12:18:49+01:00</updated>
   <id>http://Elastica.io/</id>
   <author>
     <name><![CDATA[@ruflin]]></name>
@@ -18,7 +18,7 @@
     <link href="http://Elastica.io/2014/03/02/release-v1-dot-0-1-dot-0/"/>
     <updated>2014-03-02T12:12:34+01:00</updated>
     <id>http://Elastica.io/2014/03/02/release-v1-dot-0-1-dot-0</id>
-    <content type="html"><![CDATA[<p>Elastica v1.0.1.0 <a href="https://github.com/ruflin/Elastica/tree/v1.0.1.0">download</a>. This release is compatible with elasticsearch 1.0.1.</p>
+    <content type="html"><![CDATA[<p><a href="https://github.com/ruflin/Elastica/tree/v1.0.1.0">Elastica v1.0.1.0</a> (<a href="https://github.com/ruflin/Elastica/releases/tag/v1.0.1.0">download</a>). This release is compatible with elasticsearch 1.0.1.</p>
 
 <h2>Dependencies</h2>
 
