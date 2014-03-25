@@ -9,7 +9,7 @@
   <meta name="author" content="@ruflin">
 
   
-  <meta name="description" content="Elastica v1.0.1.1 (download). This release is compatible with elasticsearch 1.0.1. Dependencies Project Version Required Elasticsearch 1.0.1 yes &hellip;">
+  <meta name="description" content="Elastica v1.0.1.2 (download). This release is compatible with elasticsearch 1.0.1. Dependencies Project Version Required Elasticsearch 1.0.1 yes &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,97 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/03/25/release-v1-dot-0-1-dot-2/">Release v1.0.1.2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-25T20:37:06+01:00" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/ruflin/Elastica/tree/v1.0.1.2">Elastica v1.0.1.2</a> (<a href="https://github.com/ruflin/Elastica/releases/tag/v1.0.1.2">download</a>). This release is compatible with elasticsearch 1.0.1.</p>
+
+<h2>Dependencies</h2>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th> Project </th>
+<th> Version </th>
+<th> Required </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><a href="https://github.com/elasticsearch/elasticsearch/tree/v1.0.1">Elasticsearch</a></td>
+<td> 1.0.1 </td>
+<td> yes</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://github.com/elasticsearch/elasticsearch-mapper-attachments/tree/v2.0.0.RC1">Elasticsearch mapper attachments plugin</a></td>
+<td>2.0.0.RC1</td>
+<td>no</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://github.com/elasticsearch/elasticsearch-transport-thrift/tree/v2.0.0.RC2">Elasticsearch thrift transport plugin</a></td>
+<td>2.0.0.RC2</td>
+<td>no</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://github.com/zenobase/geocluster-facet/tree/0.0.10">Elasticsearch geocluster facet plugin</a></td>
+<td>0.0.10</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+
+
+<h2>Release Notes (changes.txt)</h2>
+
+<ul>
+<li>Added Filter\Indices #574</li>
+<li>Allow json string as data srouce for Bulk\Action on update #575</li>
+<li>Allow for request params in delete by query calls #573</li>
+<li>Added filters: AbstractGeoShape, GeoShapePreIndexed, GeoShapeProvided #568</li>
+<li>Percolate existing documents and add percolate options (#570)</li>
+<li>Added Query\Rescore #441</li>
+<li>Added missing query options for MultiMatch (operator, minimum_should_match, zero_terms_query, cutoff_frequency, type, fuzziness, prefix_length, max_expansions, analyzer) #569</li>
+<li>Added missing query options for Match (zero_terms_query, cutoff_frequency) #569</li>
+<li>Fixed request body reuse in http transport #567</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -933,78 +1024,9 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2012/08/12/release-v0-dot-19-dot-8-0/">Release v0.19.8.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-12T21:15:00+02:00" pubdate data-updated="true">Aug 12<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>Release <a href="https://github.com/ruflin/Elastica/tree/v0.19.8.0">v0.19.8.0</a></h1>
-
-<p>This release breaks backward compatibility!</p>
-
-<p>Date: 2012-08-12</p>
-
-<h2>Release Notes</h2>
-
-<p>All changes can be found in the <a href="https://github.com/ruflin/Elastica/blob/v0.19.8.0/changes.txt">changes.txt</a></p>
-
-<h3>BC Breaks</h3>
-
-<ul>
-<li>Change Elastica_Filter_GeoDistance::__construct(), accepts geohash parameter (BC break, before: ($key, $latitude, $longitude, $distance), after: ($key, $location, $distance) where $location is array(&lsquo;lat&rsquo; => $latitude, &lsquo;lon&rsquo; => $longitude) or a geohash)</li>
-</ul>
-
-
-<h3>Changes</h3>
-
-<ul>
-<li>Remove old style path creation through params in Elastica_Index::create and Elastica_Search::search</li>
-<li>PSR1/PSR2 Style enforced&lt;</li>
-</ul>
-
-
-<h3>Additions</h3>
-
-<ul>
-<li>Elastica_Query_Prefix added</li>
-<li>Added Elastica_ScriptFields</li>
-<li>Added Elastica_Filter_Limit</li>
-<li>Facet scope added</li>
-<li>Added Elastica_Filter_MatchAll</li>
-<li>Added Elastica_Filter_Limit</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1015,6 +1037,10 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/25/release-v1-dot-0-1-dot-2/">Release v1.0.1.2</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/08/release-v1-dot-0-1-dot-1/">Release v1.0.1.1</a>
@@ -1030,10 +1056,6 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
     
       <li class="post">
         <a href="/2014/02/02/release-v0-dot-90-dot-10-dot-0/">Release v0.90.10.0</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/11/23/release-v0-dot-90-dot-7-0/">Release v0.90.7.0</a>
       </li>
     
   </ul>
