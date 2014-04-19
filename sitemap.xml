@@ -45,16 +45,20 @@
         <lastmod>2014-03-25T20:37:46+01:00</lastmod>
     </url>
     <url>
+        <loc>http://Elastica.io/2014/04/19/release-v1-dot-1-1-dot-0/</loc>
+        <lastmod>2014-04-19T17:14:34+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://Elastica.io/404.html</loc>
         <lastmod>2013-07-07T15:21:02+02:00</lastmod>
     </url>
     <url>
         <loc>http://Elastica.io/blog/archives/</loc>
-        <lastmod>2014-03-25T20:37:46+01:00</lastmod>
+        <lastmod>2014-04-19T17:14:34+02:00</lastmod>
     </url>
     <url>
         <loc>http://Elastica.io/blog/</loc>
-        <lastmod>2014-03-25T20:37:46+01:00</lastmod>
+        <lastmod>2014-04-19T17:14:34+02:00</lastmod>
     </url>
     <url>
         <loc>http://Elastica.io/contribute/build.html</loc>
@@ -138,7 +142,7 @@
     </url>
     <url>
         <loc>http://Elastica.io/references/</loc>
-        <lastmod>2013-11-23T22:30:09+01:00</lastmod>
+        <lastmod>2014-04-19T17:12:56+02:00</lastmod>
     </url>
     <url>
         <loc>http://Elastica.io/release/how-to-create-an-elastica-release.html</loc>
