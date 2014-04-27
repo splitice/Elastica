@@ -9,7 +9,7 @@
   <meta name="author" content="@ruflin">
 
   
-  <meta name="description" content="Elastica v1.1.1.0 (download). This release is compatible with elasticsearch 1.1.1. Dependencies Project Version Required Elasticsearch 1.1.1 yes &hellip;">
+  <meta name="description" content="Elastica v1.1.1.1 (download). This release is compatible with elasticsearch 1.1.1. Dependencies Project Version Required Elasticsearch 1.1.1 yes &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,96 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/04/27/release-v1-dot-1-1-dot-1/">Release v1.1.1.1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-27T19:35:03+02:00" pubdate data-updated="true">Apr 27<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/ruflin/Elastica/tree/v1.1.1.1">Elastica v1.1.1.1</a> (<a href="https://github.com/ruflin/Elastica/releases/tag/v1.1.1.1">download</a>). This release is compatible with elasticsearch 1.1.1.</p>
+
+<h2>Dependencies</h2>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th> Project </th>
+<th> Version </th>
+<th> Required </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><a href="https://github.com/elasticsearch/elasticsearch/tree/v1.1.1">Elasticsearch</a></td>
+<td> 1.1.1 </td>
+<td> yes</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://github.com/elasticsearch/elasticsearch-mapper-attachments/tree/v2.0.0.RC1">Elasticsearch mapper attachments plugin</a></td>
+<td>2.0.0.RC1</td>
+<td>no</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://github.com/elasticsearch/elasticsearch-transport-thrift/tree/v2.0.0.RC2">Elasticsearch thrift transport plugin</a></td>
+<td>2.0.0.RC2</td>
+<td>no</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://github.com/zenobase/geocluster-facet/tree/0.0.10">Elasticsearch geocluster facet plugin</a></td>
+<td>0.0.10</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+
+
+<h2>Release Notes (changes.txt)</h2>
+
+<ul>
+<li>Fix missing use in TermsStats->setOrder() #597</li>
+<li>Replace all instances of ElasticSearch with Elasticsearch #597</li>
+<li>Fixing the Bool filter with Bool filter children bug #594</li>
+<li>Remove useless echo in the Memcache Transport object #595</li>
+<li>escape \ by \ #592</li>
+<li>Handling of HasChild type parsing bug #585</li>
+<li>Consolidate Index getMapping tests #591</li>
+<li>Fix Type::getMapping when using an aliased index #588</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -869,91 +959,6 @@ See <a href="http://elastica.io/migration/0.90.2/upsert.html">http://elastica.io
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/06/07/release-v0-dot-90-dot-1-0/">Release v0.90.1.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-07T21:14:00+02:00" pubdate data-updated="true">Jun 7<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li><a href="https://github.com/ruflin/Elastica/tree/v0.90.1.0">Download</a></li>
-</ul>
-
-
-<p>This release is a consists of several bigger refactoring steps in Elastica to make it compatible with the newest elasticsearch versions and allow to use the newest features. The release v0.90.1.0 is compatible with <a href="http://www.elasticsearch.org/2013/05/30/0-90-1-released/">elasticsearch 0.90.1</a>.</p>
-
-<p>There are quite a few changes which break BC since the last official release <a href="/2012/08/12/release-v0-dot-19-dot-8-0/">v0.19.8.0</a>. For more details on the BC breaks follow the changes below and also check the <a href="/2013/02/20/release-v0-dot-20-dot-5-0/">v0.20.5.0</a> release candidate changes for more details.</p>
-
-<p>There are still some open pull requests pending with larger changes which could break BC. The goal is to get these changes in before release 1.0 of elasticsearch.</p>
-
-<h1>Changes</h1>
-
-<ul>
-<li>Changed package name to lowercase to prevent potential issues with case sensitive file systems and to refelect the package name from packagist.org.
-If you are requiring elastica in your project you might want to change the name in the require to lowercase, although it will still work if written in uppercase.
-The composer autoloader will handle the package correctly and you will not notice any difference.
-If you are requiring or including a file by hand with require() or include() from the composer vendor folder, pay attention that the package name in
-the path will change to lowercase.</li>
-<li>Add Bulk\Action\UpdateDocument.</li>
-<li>Update Bulk\Action\AbstractDocument and Bulk\Action to enable use of OP_TYPE_UPDATE.</li>
-<li>Update .travis.yml to use Elasticsearch version 0.9.1, as bulk update is a new feature in 0.9.1.</li>
-<li>Elastica\Client::<em>configureParams() changed to </em>prepareConnectionParams(), which now takes the config array as an argument</li>
-<li>Add getPlugins and hasPlugin methods to Node\Info</li>
-<li>Update Index\Status::getAliases() to use new API</li>
-<li>Update Index\Status::getSettings() to use new API</li>
-<li>Add _meta to mapping. #330</li>
-<li>Added parameters to implement scroll</li>
-<li>add support PSR-3(<a href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md">https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md</a>)</li>
-<li>Elastica\Log implement LoggerInterface(extends Psr\Log\AbstractLogger)
-if you want use logging need install <a href="https://github.com/php-fig/log">https://github.com/php-fig/log</a> for example (composer require psr/log:dev-master)
-if use Elastica\Log inside Elastica\Client nothing more is needed
-if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/log">https://github.com/php-fig/log</a>) for example Elastica\Log::info($message) or Elastica\Log::log(LogLevel::INFO,$message)</li>
-<li>Elastica\Client add setLogger for setting custom Logger for example Monolog(<a href="https://github.com/Seldaek/monolog">https://github.com/Seldaek/monolog</a>)</li>
-<li>Elastica\Index::exists fixed for 0.90.0. HEAD request method introduced</li>
-<li>Elastica\Filter\AbstractMulti::getFilters() added</li>
-<li>Implement Elastica\Type\Mapping::enableAllField</li>
-<li>Refresh for Elastica\Index::flush implemented #316</li>
-<li>Added optional parameter to filter result while percolate #384</li>
-<li>Added EXPERIMENTAL DocumentObjectInterface to be used with Type::addObject()/addObjects()</li>
-<li>Removed Elastica\Exception\AbstractException</li>
-<li>All Exceptions now implement Elastica\Exception\ExceptionInterface</li>
-<li>Query\Fuzzy to comply with DSL spec. Multi-field queries now throw an exception. Implemented: Query\Fuzzy::setField, Query\Fuzzy::setFieldOption.</li>
-<li>Query\Fuzzy::addField has been deprecated.</li>
-<li>Adding max score information in ResultSet</li>
-<li>Adding test for the ResultSet class</li>
-<li>Removal of unsupported minimum_number_should_match for Boolean Filter</li>
-<li>Added Elastica\Bulk class responsible for performing bulk requests. New bulk requests implemented: Client::deleteDocuments(), Bulk::sendUdp()</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -969,6 +974,10 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/04/27/release-v1-dot-1-1-dot-1/">Release v1.1.1.1</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/04/19/release-v1-dot-1-1-dot-0/">Release v1.1.1.0</a>
       </li>
     
@@ -982,10 +991,6 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
     
       <li class="post">
         <a href="/2014/03/02/release-v1-dot-0-1-dot-0/">Release v1.0.1.0</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/02/12/release-v1-dot-0-0-dot-0/">Release v1.0.0.0</a>
       </li>
     
   </ul>
