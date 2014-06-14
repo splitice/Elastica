@@ -9,7 +9,7 @@
   <meta name="author" content="@ruflin">
 
   
-  <meta name="description" content="Download This release is a consists of several bigger refactoring steps in Elastica to make it compatible with the newest elasticsearch versions and &hellip;">
+  <meta name="description" content="This release is compatible with elasticsearch 0.90.2. The only BC break in this release is that now Scripts is a frist class citizens in upsert. The &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/08/25/release-v0-dot-90-dot-2-0/">Release v0.90.2.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-25T10:47:00+02:00" pubdate data-updated="true">Aug 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release is compatible with <a href="http://www.elasticsearch.org/downloads/0-90-2/">elasticsearch 0.90.2</a>. The only BC break in this release is that now Scripts is a frist class citizens in upsert. The migration guide can be found <a href="/migration/0.90.2/upsert.html">here</a>.</p>
+
+<p><a href="https://github.com/ruflin/Elastica/tree/v0.90.2.0">Download</a></p>
+
+<h2>Release Notes (changes.txt)</h2>
+
+<ul>
+<li>Support for &ldquo;proxy&rdquo; param for http connections</li>
+<li>Add support for fields parameter in Elastica_Type::getDocument()</li>
+<li>Add a getQuery method on the FilteredQuery object</li>
+<li>Second param to \Elastica\Search.php:count($query = &lsquo;&rsquo;, $fullResult = false) added. If second param is set to true, full ResultSet is returned including facets.</li>
+<li>Plugin geocluster-facet support added</li>
+<li>Add Query\Common</li>
+<li>Can now create a query by passing an array to Type::search()</li>
+<li>Add Filter\GeohashCell</li>
+<li>Revamped upsert so that Scripts are now first class citizens. (BC break)
+See <a href="http://elastica.io/migration/0.90.2/upsert.html">http://elastica.io/migration/0.90.2/upsert.html</a></li>
+<li>Implemented doc_as_upsert.</li>
+<li>Update to elasticsearch 0.90.2</li>
+<li>Enabled ES_WAIT_ON_MAPPING_CHANGE for travis builds</li>
+<li>Added upsert support when updating a document with a partial document or a script.</li>
+<li>Add filtered queries to the percolator API.</li>
+<li>Correct class name for TermTest unit test</li>
+<li>Implement terms lookup feature for terms filter</li>
+<li>Fix support for making scroll queries once the scroll has been started.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -414,6 +476,10 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/14/release-v1-dot-2-1-dot-0/">Release v1.2.1.0</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/04/27/release-v1-dot-1-1-dot-1/">Release v1.1.1.1</a>
       </li>
     
@@ -427,10 +493,6 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
     
       <li class="post">
         <a href="/2014/03/08/release-v1-dot-0-1-dot-1/">Release v1.0.1.1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/03/02/release-v1-dot-0-1-dot-0/">Release v1.0.1.0</a>
       </li>
     
   </ul>
