@@ -9,7 +9,8 @@
   <meta name="author" content="@ruflin">
 
   
-  <meta name="description" content="This release is compatible with elasticsearch 0.90.2. The only BC break in this release is that now Scripts is a frist class citizens in upsert. The &hellip;">
+  <meta name="description" content="Elastica v0.90.5.0 download. This release is compatible with elasticsearch 0.90.5 Release Notes (changes.txt) Update to elasticsearch 0.90.5
+Fix \ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/10/27/release-v0-dot-90-dot-5-0/">Release v0.90.5.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-27T13:56:00+01:00" pubdate data-updated="true">Oct 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Elastica v0.90.5.0 <a href="https://github.com/ruflin/Elastica/tree/v0.90.5.0">download</a>. This release is compatible with elasticsearch 0.90.5</p>
+
+<h2>Release Notes (changes.txt)</h2>
+
+<ul>
+<li>Update to elasticsearch <a href="http://www.elasticsearch.org/downloads/0-90-5/">0.90.5</a></li>
+<li>Fix \Elastica\Filter\HasParent usage of \Elastica\Query as to not collide with \Elastica\Filter\Query, bring \Elasitca\Filter\HasChild into line</li>
+<li>Also pass the current client object to the failure callback in \Elastica\Client.</li>
+<li>Update to geocluster-facet 0.0.8</li>
+<li>Add support for term suggest API. See <a href="http://www.elasticsearch.org/guide/reference/api/search/term-suggest/">http://www.elasticsearch.org/guide/reference/api/search/term-suggest/</a></li>
+<li>Fix \Elastica\Filter\HasChild usage of \Elastica\Query as to not collide with \Elastica\Filter\Query namespace</li>
+<li>Update to elasticsearch 0.90.4</li>
+<li>Add support for function_score query</li>
+<li>Skip geocluster-facet test if the plugin is not installed</li>
+<li>Correct \Elastica\Test\ClientTest to catch the proper exception type on connection failure</li>
+<li>Fix unit test errors</li>
+<li>Nested filter supports now the setFilter method</li>
+<li>Support isset() calls on Result objects</li>
+<li>Add \ArrayAccess on the ResultSet object</li>
+<li>Update to elasticsearch 0.90.3</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -476,6 +534,10 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/07/27/release-v1-dot-3-0-dot-0/">Release v1.3.0.0</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/06/14/release-v1-dot-2-1-dot-0/">Release v1.2.1.0</a>
       </li>
     
@@ -489,10 +551,6 @@ if use Elastica\Log outside we need use as(<a href="https://github.com/php-fig/l
     
       <li class="post">
         <a href="/2014/03/25/release-v1-dot-0-1-dot-2/">Release v1.0.1.2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/03/08/release-v1-dot-0-1-dot-1/">Release v1.0.1.1</a>
       </li>
     
   </ul>
