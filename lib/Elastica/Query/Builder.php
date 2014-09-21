@@ -331,6 +331,20 @@ class Builder extends AbstractQuery
         return $this;
     }
 
+    public function field_raw($name, $value){
+        if (is_bool($value)) {
+            $value = var_export($value, true);
+        } elseif (is_array($value)) {
+            $value = '['.implode(',', $value).'"]';
+        } else {
+            $value = $value;
+        }
+
+        $this->_string .= '"'.$name.'":'.$value.',';
+
+        return $this;
+    }
+
     /**
      * Close a field block.
      *
@@ -365,6 +379,29 @@ class Builder extends AbstractQuery
     public function fieldOpen($name)
     {
         $this->_string .= '"'.$name.'":';
+        $this->open();
+
+        return $this;
+    }
+
+    public function objectClose()
+    {
+        $this->close();
+        $this->_string = rtrim($this->_string, ',');
+        $this->_string .= '},';
+        return $this;
+    }
+
+    /**
+     * Open a node for the specified name.
+     *
+     * @param string $name Field name.
+     *
+     * @return \Elastica\Query\Builder
+     */
+    public function objectOpen($name)
+    {
+        $this->_string .= '{"'.$name.'":';
         $this->open();
 
         return $this;
@@ -577,7 +614,8 @@ class Builder extends AbstractQuery
      */
     public function must()
     {
-        return $this->fieldOpen('must');
+        $this->_string .= '"must":[';
+        return $this;
     }
 
     /**
@@ -589,7 +627,9 @@ class Builder extends AbstractQuery
      */
     public function mustClose()
     {
-        return $this->fieldClose();
+        $this->_string = rtrim($this->_string, ',');
+        $this->_string .= '],';
+        return $this;
     }
 
     /**
@@ -738,7 +778,7 @@ class Builder extends AbstractQuery
      */
     public function range()
     {
-        return $this->fieldOpen('range');
+        return $this->objectOpen('range');
     }
 
     /**
@@ -750,7 +790,7 @@ class Builder extends AbstractQuery
      */
     public function rangeClose()
     {
-        return $this->close();
+        return $this->objectClose();
     }
 
     /**
@@ -862,7 +902,7 @@ class Builder extends AbstractQuery
      */
     public function term()
     {
-        return $this->fieldOpen('term');
+        return $this->objectOpen('term');
     }
 
     /**
@@ -874,7 +914,7 @@ class Builder extends AbstractQuery
      */
     public function termClose()
     {
-        return $this->fieldClose();
+        return $this->objectclose();
     }
 
     /**
