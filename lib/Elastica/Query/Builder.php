@@ -19,9 +19,14 @@ class Builder extends AbstractQuery
     /**
      * Query string.
      *
-     * @var string
+     * @var array
      */
-    private $_string = '{';
+    private $_query = array();
+
+    /**
+     * @var \SplStack
+     */
+    private $stack;
 
     /**
      * Factory method.
@@ -35,6 +40,30 @@ class Builder extends AbstractQuery
         return new Builder($string);
     }
 
+    private function stackOpen(&$target){
+        $this->stack->push(function&() use(&$target){
+            return $target;
+        });
+        return $this;
+    }
+
+    private function stackClose(){
+        $this->stack->pop();
+        if($this->stack->count() == 0){
+            throw new \Exception('Stack closed too many times');
+        }
+        return $this;
+    }
+
+    private function& stackTop(){
+        $top = $this->stack->top();
+        if(is_callable($top)) {
+            $top = &$top();
+            return $top;
+        }
+        return $this;
+    }
+
     /**
      * Constructor
      *
@@ -42,9 +71,15 @@ class Builder extends AbstractQuery
      */
     public function __construct($string = null)
     {
-        if (! $string == null) {
-            $this->_string .= substr($string, 1, -1);
+        if($string != null){
+            if(is_string($string)){
+                $this->_query = json_decode($string);
+            }else{
+                $this->_query = $string;
+            }
         }
+        $this->stack = new \SplStack();
+        $this->stackOpen($this->_query);
     }
 
     /**
@@ -54,7 +89,7 @@ class Builder extends AbstractQuery
      */
     public function __toString()
     {
-        return rtrim($this->_string, ',').'}';
+        return json_encode($this->_query);
     }
 
     /**
@@ -62,11 +97,7 @@ class Builder extends AbstractQuery
      */
     public function toArray()
     {
-        try {
-            return JSON::parse($this->__toString());
-        } catch (JSONParseException $e) {
-            throw new InvalidException('The query produced is invalid');
-        }
+        return $this->_query;
     }
 
     /**
@@ -148,6 +179,14 @@ class Builder extends AbstractQuery
         return $this->fieldClose();
     }
 
+    function aggs(){
+        return $this->fieldOpen('aggs');
+    }
+
+    function aggsClose(){
+        return $this->fieldClose();
+    }
+
     /**
      * Sets the boost value of the query.
      *
@@ -158,18 +197,6 @@ class Builder extends AbstractQuery
     public function boost($boost = 1.0)
     {
         return $this->field('boost', (float) $boost);
-    }
-
-    /**
-     * Close a previously opened brace.
-     *
-     * @return \Elastica\Query\Builder
-     */
-    public function close()
-    {
-        $this->_string = rtrim($this->_string, ' ,').'},';
-
-        return $this;
     }
 
     /**
@@ -305,7 +332,7 @@ class Builder extends AbstractQuery
      */
     public function facetsClose()
     {
-        return $this->close();
+        return $this->fieldClose();
     }
 
     /**
@@ -318,29 +345,8 @@ class Builder extends AbstractQuery
      */
     public function field($name, $value)
     {
-        if (is_bool($value)) {
-            $value = '"'. var_export($value, true) . '"';
-        } elseif (is_array($value)) {
-            $value = '["'.implode('","', $value).'"]';
-        } else {
-            $value = '"'.$value.'"';
-        }
-
-        $this->_string .= '"'.$name.'":'.$value.',';
-
-        return $this;
-    }
-
-    public function field_raw($name, $value){
-        if (is_bool($value)) {
-            $value = var_export($value, true);
-        } elseif (is_array($value)) {
-            $value = '['.implode(',', $value).'"]';
-        } else {
-            $value = $value;
-        }
-
-        $this->_string .= '"'.$name.'":'.$value.',';
+        $change = &$this->stackTop();
+        $change[$name] = $value;
 
         return $this;
     }
@@ -366,7 +372,8 @@ class Builder extends AbstractQuery
      */
     public function fieldClose()
     {
-        return $this->close();
+        $this->stackClose();
+        return $this;
     }
 
     /**
@@ -378,17 +385,20 @@ class Builder extends AbstractQuery
      */
     public function fieldOpen($name)
     {
-        $this->_string .= '"'.$name.'":';
-        $this->open();
+        $top = &$this->stackTop();
+        if(!isset($top[$name])) {
+            $top[$name] = array();
+        }
+        $this->stackOpen($top[$name]);
 
         return $this;
     }
 
     public function objectClose()
     {
-        $this->close();
-        $this->_string = rtrim($this->_string, ',');
-        $this->_string .= '},';
+        $this->stackClose();
+        $this->stackClose();
+
         return $this;
     }
 
@@ -401,8 +411,11 @@ class Builder extends AbstractQuery
      */
     public function objectOpen($name)
     {
-        $this->_string .= '{"'.$name.'":';
-        $this->open();
+        $top = &$this->stackTop();
+        $top[] = array();
+        $this->stackOpen($top[count($top) - 1]);
+
+        $this->fieldOpen($name);
 
         return $this;
     }
@@ -416,14 +429,8 @@ class Builder extends AbstractQuery
      */
     public function fields(array $fields)
     {
-        $this->_string .= '"fields":[';
-
-        foreach ($fields as $field) {
-            $this->_string .= '"'.$field.'",';
-        }
-
-        $this->_string = rtrim($this->_string, ',').'],';
-
+        $top = &$this->stackTop();
+        $top['fields'] = $fields;
         return $this;
     }
 
@@ -444,7 +451,7 @@ class Builder extends AbstractQuery
      */
     public function filterClose()
     {
-        return $this->close();
+        return $this->fieldClose();
     }
 
     /**
@@ -592,7 +599,7 @@ class Builder extends AbstractQuery
             $this->field('boost', (float) $boost);
         }
 
-        return $this->close();
+        return $this->fieldClose();
     }
 
     /**
@@ -614,7 +621,7 @@ class Builder extends AbstractQuery
      */
     public function must()
     {
-        $this->_string .= '"must":[';
+        $this->fieldOpen('must');
         return $this;
     }
 
@@ -627,8 +634,7 @@ class Builder extends AbstractQuery
      */
     public function mustClose()
     {
-        $this->_string = rtrim($this->_string, ',');
-        $this->_string .= '],';
+        $this->stackClose();
         return $this;
     }
 
@@ -656,19 +662,6 @@ class Builder extends AbstractQuery
     {
         return $this->fieldClose();
     }
-
-    /**
-     * Add an opening brace.
-     *
-     * @return \Elastica\Query\Builder
-     */
-    public function open()
-    {
-        $this->_string .= '{';
-
-        return $this;
-    }
-
     /**
      * Sets the default slop for phrases.
      *
@@ -714,13 +707,7 @@ class Builder extends AbstractQuery
      */
     public function queries(array $queries)
     {
-        $this->_string .= '"queries":[';
-
-        foreach ($queries as $query) {
-            $this->_string .= $query.',';
-        }
-
-        $this->_string = rtrim($this->_string, ' ,').'],';
+        $this->field('queries', $queries);
 
         return $this;
     }
@@ -744,7 +731,7 @@ class Builder extends AbstractQuery
      */
     public function queryClose()
     {
-        return $this->close();
+        return $this->stackClose();
     }
 
     /**
@@ -849,7 +836,7 @@ class Builder extends AbstractQuery
      */
     public function sortClose()
     {
-        return $this->close();
+        return $this->stackClose();
     }
 
     /**
@@ -866,8 +853,8 @@ class Builder extends AbstractQuery
             ->fieldOpen('sort')
             ->fieldOpen($name)
             ->field('reverse', $reverse)
-            ->close()
-            ->close();
+            ->fieldClose()
+            ->fieldClose();
     }
 
     /**
@@ -880,13 +867,14 @@ class Builder extends AbstractQuery
      */
     public function sortFields(array $fields)
     {
-        $this->_string .= '"sort":[';
+        $this->fieldOpen('sort');
+        $target = &$this->stackTop();
 
         foreach ($fields as $fieldName => $order) {
-            $this->_string .= '{"'.$fieldName.'":"'.$order.'"},';
+            $target[$fieldName] = $order;
         }
 
-        $this->_string = rtrim($this->_string, ',') . '],';
+        $this->fieldClose();
 
         return $this;
     }
@@ -917,6 +905,15 @@ class Builder extends AbstractQuery
         return $this->objectclose();
     }
 
+    public function terms()
+    {
+        return $this->objectOpen('terms');
+    }
+
+    public function termsClose(){
+        return $this->objectClose();
+    }
+
     /**
      * Open a 'text_phrase' block.
      *
@@ -934,7 +931,7 @@ class Builder extends AbstractQuery
      */
     public function textPhraseClose()
     {
-        return $this->close();
+        return $this->fieldClose();
     }
 
     /**
