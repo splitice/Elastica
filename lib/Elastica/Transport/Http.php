@@ -37,12 +37,13 @@ class Http extends AbstractTransport
      *
      * All calls that are made to the server are done through this function
      *
-     * @param  \Elastica\Request $request
-     * @param  array $params Host, Port, ...
      * @throws \Elastica\Exception\ConnectionException
      * @throws \Elastica\Exception\ResponseException
      * @throws \Elastica\Exception\Connection\HttpException
-     * @return \Elastica\Response                    Response object
+     *
+     * @param  \Elastica\Request  $request
+     * @param  array              $params  Host, Port, ...
+     * @return \Elastica\Response Response object
      */
     public function exec(Request $request, array $params)
     {
@@ -56,7 +57,7 @@ class Http extends AbstractTransport
         if (!empty($url)) {
             $baseUri = $url;
         } else {
-            $baseUri = $this->_scheme . '://' . $connection->getHost() . ':' . $connection->getPort() . '/' . $connection->getPath();
+            $baseUri = $this->_scheme.'://'.$connection->getHost().':'.$connection->getPort().'/'.$connection->getPath();
         }
 
         $baseUri .= $request->getPath();
@@ -64,7 +65,7 @@ class Http extends AbstractTransport
         $query = $request->getQuery();
 
         if (!empty($query)) {
-            $baseUri .= '?' . http_build_query($query);
+            $baseUri .= '?'.http_build_query($query);
         }
 
         curl_setopt($conn, CURLOPT_URL, $baseUri);
@@ -72,6 +73,12 @@ class Http extends AbstractTransport
         curl_setopt($conn, CURLOPT_FORBID_REUSE, 0);
 
         $proxy = $connection->getProxy();
+
+        // See: https://github.com/facebook/hhvm/issues/4875
+        if (is_null($proxy) && defined('HHVM_VERSION')) {
+            $proxy = getenv('http_proxy') ?: null;
+        }
+
         if (!is_null($proxy)) {
             curl_setopt($conn, CURLOPT_PROXY, $proxy);
         }
@@ -83,7 +90,7 @@ class Http extends AbstractTransport
         if (!empty($headersConfig)) {
             $headers = array();
             while (list($header, $headerValue) = each($headersConfig)) {
-                array_push($headers, $header . ': ' . $headerValue);
+                array_push($headers, $header.': '.$headerValue);
             }
 
             curl_setopt($conn, CURLOPT_HTTPHEADER, $headers);
@@ -141,7 +148,6 @@ class Http extends AbstractTransport
 
         $response->setTransferInfo(curl_getinfo($conn));
 
-
         if ($response->hasError()) {
             throw new ResponseException($request, $response);
         }
@@ -174,7 +180,7 @@ class Http extends AbstractTransport
     /**
      * Return Curl resource
      *
-     * @param  bool $persistent False if not persistent connection
+     * @param  bool     $persistent False if not persistent connection
      * @return resource Connection resource
      */
     protected function _getConnection($persistent = true)

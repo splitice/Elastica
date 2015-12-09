@@ -2,10 +2,8 @@
 
 namespace Elastica\Test\Aggregation;
 
-
 use Elastica\Aggregation\Avg;
 use Elastica\Document;
-use Elastica\Index;
 use Elastica\Query;
 
 class AvgTest extends BaseAggregationTest
@@ -13,7 +11,7 @@ class AvgTest extends BaseAggregationTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_index = $this->_createIndex('avg');
+        $this->_index = $this->_createIndex();
         $docs = array(
             new Document('1', array('price' => 5)),
             new Document('2', array('price' => 8)),
@@ -35,4 +33,3 @@ class AvgTest extends BaseAggregationTest
         $this->assertEquals((5 + 8 + 1 + 3) / 4.0, $results['avg']['value']);
     }
 }
- 

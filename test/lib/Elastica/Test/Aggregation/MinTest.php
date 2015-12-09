@@ -2,7 +2,6 @@
 
 namespace Elastica\Test\Aggregation;
 
-
 use Elastica\Aggregation\Min;
 use Elastica\Document;
 use Elastica\Query;
@@ -12,7 +11,7 @@ class MinTest extends BaseAggregationTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_index = $this->_createIndex('min');
+        $this->_index = $this->_createIndex();
         $docs = array(
             new Document('1', array('price' => 5)),
             new Document('2', array('price' => 8)),
@@ -35,4 +34,3 @@ class MinTest extends BaseAggregationTest
         $this->assertEquals(1, $results['value']);
     }
 }
- 

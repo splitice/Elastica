@@ -2,12 +2,11 @@
 
 namespace Elastica\Test\Suggest;
 
+use Elastica\Document;
+use Elastica\Index;
 use Elastica\Suggest;
 use Elastica\Suggest\Term;
 use Elastica\Test\Base as BaseTest;
-use Elastica\Query;
-use Elastica\Document;
-use Elastica\Index;
 
 class TermTest extends BaseTest
 {
@@ -21,7 +20,7 @@ class TermTest extends BaseTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_index = $this->_createIndex('test_suggest');
+        $this->_index = $this->_createIndex();
         $docs = array();
         $docs[] = new Document(1, array('id' => 1, 'text' => 'GitHub'));
         $docs[] = new Document(2, array('id' => 1, 'text' => 'Elastic'));
@@ -32,11 +31,6 @@ class TermTest extends BaseTest
         $type = $this->_index->getType(self::TEST_TYPE);
         $type->addDocuments($docs);
         $this->_index->refresh();
-    }
-
-    protected function tearDown()
-    {
-        $this->_index->delete();
     }
 
     public function testToArray()
@@ -51,17 +45,17 @@ class TermTest extends BaseTest
             'suggest' => array(
                 'suggest1' => array(
                     'term' => array(
-                        'field' => '_all'
+                        'field' => '_all',
                     ),
-                    'text' => 'Foor'
+                    'text' => 'Foor',
                 ),
                 'suggest2' => array(
                     'term' => array(
-                        'field' => '_all'
+                        'field' => '_all',
                     ),
-                    'text' => 'Girhub'
-                )
-            )
+                    'text' => 'Girhub',
+                ),
+            ),
         );
 
         $this->assertEquals($expected, $suggest->toArray());

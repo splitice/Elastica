@@ -21,11 +21,11 @@ class Nested extends AbstractAggregation
 
     /**
      * Set the nested path for this aggregation
-     * @param string $path
-     * @return Nested
+     * @param  string $path
+     * @return $this
      */
     public function setPath($path)
     {
         return $this->setParam("path", $path);
     }
-} 
+}

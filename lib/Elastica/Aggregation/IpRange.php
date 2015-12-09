@@ -2,7 +2,6 @@
 
 namespace Elastica\Aggregation;
 
-
 use Elastica\Exception\InvalidException;
 
 /**
@@ -13,7 +12,7 @@ use Elastica\Exception\InvalidException;
 class IpRange extends AbstractAggregation
 {
     /**
-     * @param string $name the name of this aggregation
+     * @param string $name  the name of this aggregation
      * @param string $field the field on which to perform this aggregation
      */
     public function __construct($name, $field)
@@ -24,8 +23,8 @@ class IpRange extends AbstractAggregation
 
     /**
      * Set the field for this aggregation
-     * @param string $field the name of the document field on which to perform this aggregation
-     * @return IpRange
+     * @param  string $field the name of the document field on which to perform this aggregation
+     * @return $this
      */
     public function setField($field)
     {
@@ -34,9 +33,9 @@ class IpRange extends AbstractAggregation
 
     /**
      * Add an ip range to this aggregation
-     * @param string $fromValue a valid ipv4 address. Low end of this range, exclusive (greater than)
-     * @param string $toValue a valid ipv4 address. High end of this range, exclusive (less than)
-     * @return IpRange
+     * @param  string                               $fromValue a valid ipv4 address. Low end of this range, exclusive (greater than)
+     * @param  string                               $toValue   a valid ipv4 address. High end of this range, exclusive (less than)
+     * @return $this
      * @throws \Elastica\Exception\InvalidException
      */
     public function addRange($fromValue = null, $toValue = null)
@@ -51,16 +50,17 @@ class IpRange extends AbstractAggregation
         if (!is_null($toValue)) {
             $range['to'] = $toValue;
         }
+
         return $this->addParam('ranges', $range);
     }
 
     /**
      * Add an ip range in the form of a CIDR mask
-     * @param string $mask a valid CIDR mask
-     * @return IpRange
+     * @param  string $mask a valid CIDR mask
+     * @return $this
      */
     public function addMaskRange($mask)
     {
         return $this->addParam("ranges", array("mask" => $mask));
     }
-} 
+}

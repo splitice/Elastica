@@ -4,8 +4,8 @@ namespace Elastica\Test\Filter;
 
 use Elastica\Document;
 use Elastica\Filter\Prefix;
-use Elastica\Type\Mapping;
 use Elastica\Test\Base as BaseTest;
+use Elastica\Type\Mapping;
 
 class PrefixTest extends BaseTest
 {
@@ -18,8 +18,8 @@ class PrefixTest extends BaseTest
 
         $expectedArray = array(
             'prefix' => array(
-                $field => $prefix
-            )
+                $field => $prefix,
+            ),
         );
 
         $this->assertequals($expectedArray, $filter->toArray());
@@ -29,18 +29,6 @@ class PrefixTest extends BaseTest
     {
         $client = $this->_getClient();
         $index = $client->getIndex('test');
-
-        /*$indexParams = array(
-            'analysis' => array(
-                'analyzer' => array(
-                    'lw' => array(
-                        'type' => 'custom',
-                        'tokenizer' => 'keyword',
-                        'filter' => array('lowercase')
-                    )
-                ),
-            )
-        );*/
 
         $index->create(array(), true);
         $type = $index->getType('test');
@@ -97,10 +85,10 @@ class PrefixTest extends BaseTest
                     'lw' => array(
                         'type' => 'custom',
                         'tokenizer' => 'keyword',
-                        'filter' => array('lowercase')
-                    )
+                        'filter' => array('lowercase'),
+                    ),
                 ),
-            )
+            ),
         );
 
         $index->create($indexParams, true);

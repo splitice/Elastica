@@ -26,8 +26,8 @@ class ReverseNested extends AbstractAggregation
     /**
      * Set the nested path for this aggregation
      *
-     * @param string $path
-     * @return ReverseNested
+     * @param  string $path
+     * @return $this
      */
     public function setPath($path)
     {
@@ -43,7 +43,7 @@ class ReverseNested extends AbstractAggregation
 
         // ensure we have an object for the reverse_nested key.
         // if we don't have a path, then this would otherwise get encoded as an empty array, which is invalid.
-        $array['reverse_nested'] = (object)$array['reverse_nested'];
+        $array['reverse_nested'] = (object) $array['reverse_nested'];
 
         return $array;
     }

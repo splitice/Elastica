@@ -5,37 +5,33 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - hhvm
 
 matrix:
-  allow_failures:
-    - php: 5.6
+    allow_failures:
+        - php: 5.3
+        - php: hhvm
+    fast_finish: true
 
 env:
-  global:
-    - ES_VER=1.3.0
-    - ES_MAPPER_ATTACHMENTS_VER=2.0.0.RC1
-    - ES_TRANSPORT_THRIFT_VER=2.0.0
-    - ES_GEOCLUSTER_FACET_VER=0.0.10
-    - ES_WAIT_ON_MAPPING_CHANGE=true
-    - MEMCACHE_VER=3.0.8
   matrix:
-    - ES_REQUIRE=dev
-    - ES_REQUIRE=no-dev
-    
-services:
-    - memcached
+    - ES_COMPOSER_NODEV=no
+    - ES_COMPOSER_NODEV=yes
+
+install:
+  - /bin/bash ansible/provision.sh
 
 before_script:
-    - composer self-update
-    - composer --${ES_REQUIRE} --prefer-source install
-    - ./test/bin/install_php_memcache.sh
-    - ./test/bin/run_elasticsearch.sh
-    - ./test/bin/run_proxy.sh
+  - mkdir -p build/logs
+  - sh -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then echo "extension=memcache.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;'
+  - if [ $ES_COMPOSER_NODEV == "no" ] && ! $(phpenv version-name | grep -q '5.3'); then sudo composer require "guzzlehttp/guzzle" "4.2.*" --dev --no-ansi --no-progress --no-interaction; fi
 
 script:
-    - mkdir -p build/logs
-    - phpunit --coverage-clover build/logs/clover.xml -c test/
+  - phpunit -c test/phpunit-travis.xml
 
 after_script:
-    - ./test/bin/show_logs.sh
-    - php vendor/bin/coveralls -v
+  - cat /var/log/elasticsearch/*.log
+  - cat /var/log/nginx/*.log
+  - cat build/logs/phpunit-tap.log
+  - sudo composer require satooshi/php-coveralls --no-ansi --no-progress --no-interaction
+  - php vendor/bin/coveralls -v

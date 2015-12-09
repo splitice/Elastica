@@ -2,8 +2,6 @@
 
 namespace Elastica;
 
-use Elastica\JSON;
-
 /**
  * Elastica tools
  *
@@ -12,6 +10,7 @@ use Elastica\JSON;
  * @author Nicolas Ruflin <spam@ruflin.com>
  * @author Thibault Duplessis <thibault.duplessis@gmail.com>
  * @author Oleg Zinchenko <olegz@default-value.com>
+ * @author Roberto Nygaard <roberto@nygaard.es>
  */
 class Util
 {
@@ -20,10 +19,11 @@ class Util
      * and
      * escapes the following terms: + - && || ! ( ) { } [ ] ^ " ~ * ? : \
      *
-     * @param  string $term Query term to replace and escape
-     * @return string Replaced and escaped query term
      * @link http://lucene.apache.org/java/2_4_0/queryparsersyntax.html#Boolean%20operators
      * @link http://lucene.apache.org/java/2_4_0/queryparsersyntax.html#Escaping%20Special%20Characters
+     *
+     * @param  string $term Query term to replace and escape
+     * @return string Replaced and escaped query term
      */
     public static function replaceBooleanWordsAndEscapeTerm($term)
     {
@@ -36,20 +36,22 @@ class Util
 
     /**
      * Escapes the following terms (because part of the query language)
-     * + - && || ! ( ) { } [ ] ^ " ~ * ? : \
+     * + - && || ! ( ) { } [ ] ^ " ~ * ? : \ < >
+     *
+     * @link http://lucene.apache.org/java/2_4_0/queryparsersyntax.html#Escaping%20Special%20Characters
+     * @link http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_reserved_characters
      *
      * @param  string $term Query term to escape
      * @return string Escaped query term
-     * @link http://lucene.apache.org/java/2_4_0/queryparsersyntax.html#Escaping%20Special%20Characters
      */
     public static function escapeTerm($term)
     {
         $result = $term;
         // \ escaping has to be first, otherwise escaped later once again
-        $chars = array('\\', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/');
+        $chars = array('\\', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/', '<', '>');
 
         foreach ($chars as $char) {
-            $result = str_replace($char, '\\' . $char, $result);
+            $result = str_replace($char, '\\'.$char, $result);
         }
 
         return $result;
@@ -59,13 +61,14 @@ class Util
      * Replace the following reserved words (because part of the query language)
      * AND OR NOT
      *
+     * @link http://lucene.apache.org/java/2_4_0/queryparsersyntax.html#Boolean%20operators
+     *
      * @param  string $term Query term to replace
      * @return string Replaced query term
-     * @link http://lucene.apache.org/java/2_4_0/queryparsersyntax.html#Boolean%20operators
      */
     public static function replaceBooleanWords($term)
     {
-        $replacementMap = array('AND'=>'&&', 'OR'=>'||', 'NOT'=>'!');
+        $replacementMap = array(' AND ' => ' && ', ' OR ' => ' || ', ' NOT ' => ' !');
         $result = strtr($term, $replacementMap);
 
         return $result;
@@ -96,7 +99,7 @@ class Util
     {
         $string = preg_replace('/([A-Z])/', '_$1', $string);
 
-        return strtolower(substr($string,1));
+        return strtolower(substr($string, 1));
     }
 
     /**
@@ -115,6 +118,23 @@ class Util
             $timestamp = strtotime($date);
         }
         $string =  date('Y-m-d\TH:i:s\Z', $timestamp);
+
+        return $string;
+    }
+
+    /**
+     * Convert a \DateTime object to format: 1995-12-31T23:59:59Z+02:00
+     *
+     * Converts it to the lucene format, including the appropriate TimeZone
+     *
+     * @param  \DateTime $dateTime
+     * @param  boolean   $includeTimezone
+     * @return string
+     */
+    public static function convertDateTimeObject(\DateTime $dateTime, $includeTimezone = true)
+    {
+        $formatString = 'Y-m-d\TH:i:s'.($includeTimezone === true ? 'P' : '\Z');
+        $string = $dateTime->format($formatString);
 
         return $string;
     }
@@ -143,26 +163,27 @@ class Util
     /**
      * Converts Request to Curl console command
      *
-     * @param Request $request
+     * @param  Request $request
      * @return string
      */
     public static function convertRequestToCurlCommand(Request $request)
     {
-        $message = 'curl -X' . strtoupper($request->getMethod()) . ' ';
-        $message .= '\'http://' . $request->getConnection()->getHost() . ':' . $request->getConnection()->getPort() . '/';
+        $message = 'curl -X'.strtoupper($request->getMethod()).' ';
+        $message .= '\'http://'.$request->getConnection()->getHost().':'.$request->getConnection()->getPort().'/';
         $message .= $request->getPath();
 
         $query = $request->getQuery();
         if (!empty($query)) {
-            $message .= '?' . http_build_query($query);
+            $message .= '?'.http_build_query($query);
         }
 
         $message .= '\'';
 
         $data = $request->getData();
         if (!empty($data)) {
-            $message .= ' -d \'' . JSON::stringify($data) . '\'';
+            $message .= ' -d \''.JSON::stringify($data).'\'';
         }
+
         return $message;
     }
 }

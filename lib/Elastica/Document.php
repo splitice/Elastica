@@ -2,10 +2,10 @@
 
 namespace Elastica;
 
-use Elastica\Exception\InvalidException;
 use Elastica\Bulk\Action;
-use Elastica\Filter\Bool;
+use Elastica\Exception\InvalidException;
 use Elastica\Exception\NotImplementedException;
+use Elastica\Filter\Bool;
 
 /**
  * Single document stored in elastic search
@@ -40,10 +40,10 @@ class Document extends AbstractUpdateAction
     /**
      * Creates a new document
      *
-     * @param int|string $id    OPTIONAL $id Id is create if empty
-     * @param array|string  $data  OPTIONAL Data array
-     * @param string     $type  OPTIONAL Type name
-     * @param string     $index OPTIONAL Index name
+     * @param int|string   $id    OPTIONAL $id Id is create if empty
+     * @param array|string $data  OPTIONAL Data array
+     * @param string       $type  OPTIONAL Type name
+     * @param string       $index OPTIONAL Index name
      */
     public function __construct($id = '', $data = array(), $type = '', $index = '')
     {
@@ -54,7 +54,7 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function __get($key)
@@ -64,7 +64,7 @@ class Document extends AbstractUpdateAction
 
     /**
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function __set($key, $value)
     {
@@ -72,7 +72,7 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return bool
      */
     public function __isset($key)
@@ -89,23 +89,26 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param string $key
-     * @return mixed
      * @throws \Elastica\Exception\InvalidException
+     *
+     * @param  string $key
+     * @return mixed
      */
     public function get($key)
     {
         if (!$this->has($key)) {
             throw new InvalidException("Field {$key} does not exist");
         }
+
         return $this->_data[$key];
     }
 
     /**
-     * @param string $key
-     * @param mixed $value
      * @throws \Elastica\Exception\InvalidException
-     * @return \Elastica\Document
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     * @return $this
      */
     public function set($key, $value)
     {
@@ -118,7 +121,7 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return bool
      */
     public function has($key)
@@ -127,9 +130,10 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param string $key
      * @throws \Elastica\Exception\InvalidException
-     * @return \Elastica\Document
+     *
+     * @param  string $key
+     * @return $this
      */
     public function remove($key)
     {
@@ -145,9 +149,9 @@ class Document extends AbstractUpdateAction
      * Adds the given key/value pair to the document
      *
      * @deprecated
-     * @param  string            $key   Document entry key
-     * @param  mixed             $value Document entry value
-     * @return \Elastica\Document
+     * @param  string $key   Document entry key
+     * @param  mixed  $value Document entry value
+     * @return $this
      */
     public function add($key, $value)
     {
@@ -165,17 +169,17 @@ class Document extends AbstractUpdateAction
      * This installs the tika file analysis plugin. More infos about supported formats
      * can be found here: {@link http://tika.apache.org/0.7/formats.html}
      *
-     * @param  string            $key      Key to add the file to
-     * @param  string            $filepath Path to add the file
-     * @param  string            $mimeType OPTIONAL Header mime type
-     * @return \Elastica\Document
+     * @param  string $key      Key to add the file to
+     * @param  string $filepath Path to add the file
+     * @param  string $mimeType OPTIONAL Header mime type
+     * @return $this
      */
     public function addFile($key, $filepath, $mimeType = '')
     {
         $value = base64_encode(file_get_contents($filepath));
 
         if (!empty($mimeType)) {
-            $value = array('_content_type' => $mimeType, '_name' => $filepath, 'content' => $value,);
+            $value = array('_content_type' => $mimeType, '_name' => $filepath, '_content' => $value);
         }
 
         $this->set($key, $value);
@@ -186,9 +190,9 @@ class Document extends AbstractUpdateAction
     /**
      * Add file content
      *
-     * @param  string            $key     Document key
-     * @param  string            $content Raw file content
-     * @return \Elastica\Document
+     * @param  string $key     Document key
+     * @param  string $content Raw file content
+     * @return $this
      */
     public function addFileContent($key, $content)
     {
@@ -200,15 +204,15 @@ class Document extends AbstractUpdateAction
      *
      * Geohashes are not yet supported
      *
-     * @param string $key       Field key
-     * @param float  $latitude  Latitude value
-     * @param float  $longitude Longitude value
+     * @param  string $key       Field key
+     * @param  float  $latitude  Latitude value
+     * @param  float  $longitude Longitude value
      * @link http://www.elasticsearch.org/guide/reference/mapping/geo-point-type.html
-     * @return \Elastica\Document
+     * @return $this
      */
     public function addGeoPoint($key, $latitude, $longitude)
     {
-        $value = array('lat' => $latitude, 'lon' => $longitude,);
+        $value = array('lat' => $latitude, 'lon' => $longitude);
 
         $this->set($key, $value);
 
@@ -218,8 +222,8 @@ class Document extends AbstractUpdateAction
     /**
      * Overwrites the current document data with the given data
      *
-     * @param  array|string             $data Data array
-     * @return \Elastica\Document
+     * @param  array|string $data Data array
+     * @return $this
      */
     public function setData($data)
     {
@@ -239,13 +243,14 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param \Elastica\Script $data
      * @throws NotImplementedException
      * @deprecated
+     *
+     * @param \Elastica\Script $data
      */
     public function setScript($data)
     {
-       throw new NotImplementedException("setScript() is no longer available as of 0.90.2. See http://elastica.io/migration/0.90.2/upsert.html to migrate");
+        throw new NotImplementedException("setScript() is no longer available as of 0.90.2. See http://elastica.io/migration/0.90.2/upsert.html to migrate");
     }
 
     /**
@@ -267,8 +272,8 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param bool $value
-     * @return \Elastica\Document
+     * @param  bool  $value
+     * @return $this
      */
     public function setDocAsUpsert($value)
     {
@@ -286,7 +291,7 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param bool $autoPopulate
+     * @param  bool  $autoPopulate
      * @return $this
      */
     public function setAutoPopulate($autoPopulate = true)
@@ -317,9 +322,10 @@ class Document extends AbstractUpdateAction
     }
 
     /**
-     * @param  array|\Elastica\Document        $data
      * @throws \Elastica\Exception\InvalidException
-     * @return \Elastica\Document
+     *
+     * @param  array|\Elastica\Document $data
+     * @return self
      */
     public static function create($data)
     {

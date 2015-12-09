@@ -4,6 +4,8 @@ namespace Elastica\Test\Query;
 
 use Elastica\Document;
 use Elastica\Query\Match;
+use Elastica\Query\MatchPhrase;
+use Elastica\Query\MatchPhrasePrefix;
 use Elastica\Test\Base as BaseTest;
 
 class MatchTest extends BaseTest
@@ -46,9 +48,9 @@ class MatchTest extends BaseTest
                     'fuzziness' => $fuzziness,
                     'fuzzy_rewrite' => $fuzzyRewrite,
                     'prefix_length' => $prefixLength,
-                    'max_expansions' => $maxExpansions
-                )
-            )
+                    'max_expansions' => $maxExpansions,
+                ),
+            ),
         );
 
         $this->assertEquals($expectedArray, $query->toArray());
@@ -78,6 +80,68 @@ class MatchTest extends BaseTest
         $query = new Match();
         $query->setFieldQuery($field, 'Basel New');
         $query->setFieldOperator($field, $operator);
+
+        $resultSet = $index->search($query);
+
+        $this->assertEquals(4, $resultSet->count());
+    }
+	
+    public function testMatchSetFieldBoost()
+    {
+        $client = $this->_getClient();
+        $index = $client->getIndex('test');
+        $index->create(array(), true);
+        $type = $index->getType('test');
+
+        $doc = new Document(1, array('name' => 'Basel-Stadt'));
+        $type->addDocument($doc);
+        $doc = new Document(2, array('name' => 'New York'));
+        $type->addDocument($doc);
+        $doc = new Document(3, array('name' => 'New Hampshire'));
+        $type->addDocument($doc);
+        $doc = new Document(4, array('name' => 'Basel Land'));
+        $type->addDocument($doc);
+
+        $index->refresh();
+
+        $field = 'name';
+        $operator = 'or';
+
+        $query = new Match();
+        $query->setFieldQuery($field, 'Basel New');
+        $query->setFieldOperator($field, $operator);
+		$query->setFieldBoost($field, 1.2);
+
+        $resultSet = $index->search($query);
+
+        $this->assertEquals(4, $resultSet->count());
+    }
+	
+    public function testMatchSetFieldBoostWithString()
+    {
+        $client = $this->_getClient();
+        $index = $client->getIndex('test');
+        $index->create(array(), true);
+        $type = $index->getType('test');
+
+        $doc = new Document(1, array('name' => 'Basel-Stadt'));
+        $type->addDocument($doc);
+        $doc = new Document(2, array('name' => 'New York'));
+        $type->addDocument($doc);
+        $doc = new Document(3, array('name' => 'New Hampshire'));
+        $type->addDocument($doc);
+        $doc = new Document(4, array('name' => 'Basel Land'));
+        $type->addDocument($doc);
+
+        $index->refresh();
+
+        $field = 'name';
+        $operator = 'or';
+
+        $query = new Match();
+        $query->setFieldQuery($field, 'Basel New');
+        $query->setFieldOperator($field, $operator);
+		$query->setFieldBoost($field, "1.2");
 
         $resultSet = $index->search($query);
 
@@ -135,6 +199,34 @@ class MatchTest extends BaseTest
         $this->assertEquals(1, $resultSet->count());
     }
 
+    public function testMatchPhraseAlias()
+    {
+        $client = $this->_getClient();
+        $index = $client->getIndex('test');
+        $index->create(array(), true);
+        $type = $index->getType('test');
+
+        $doc = new Document(1, array('name' => 'Basel-Stadt'));
+        $type->addDocument($doc);
+        $doc = new Document(2, array('name' => 'New York'));
+        $type->addDocument($doc);
+        $doc = new Document(3, array('name' => 'New Hampshire'));
+        $type->addDocument($doc);
+        $doc = new Document(4, array('name' => 'Basel Land'));
+        $type->addDocument($doc);
+
+        $index->refresh();
+
+        $field = 'name';
+
+        $query = new MatchPhrase();
+        $query->setFieldQuery($field, 'New York');
+
+        $resultSet = $index->search($query);
+
+        $this->assertEquals(1, $resultSet->count());
+    }
+
     public function testMatchPhrasePrefix()
     {
         $client = $this->_getClient();
@@ -164,24 +256,50 @@ class MatchTest extends BaseTest
 
         $this->assertEquals(2, $resultSet->count());
     }
-    
-    
+
+    public function testMatchPhrasePrefixAlias()
+    {
+        $client = $this->_getClient();
+        $index = $client->getIndex('test');
+        $index->create(array(), true);
+        $type = $index->getType('test');
+
+        $doc = new Document(1, array('name' => 'Basel-Stadt'));
+        $type->addDocument($doc);
+        $doc = new Document(2, array('name' => 'New York'));
+        $type->addDocument($doc);
+        $doc = new Document(3, array('name' => 'New Hampshire'));
+        $type->addDocument($doc);
+        $doc = new Document(4, array('name' => 'Basel Land'));
+        $type->addDocument($doc);
+
+        $index->refresh();
+
+        $field = 'name';
+
+        $query = new MatchPhrasePrefix();
+        $query->setFieldQuery($field, 'New');
+
+        $resultSet = $index->search($query);
+
+        $this->assertEquals(2, $resultSet->count());
+    }
+
     public function testMatchFuzzinessType()
     {
         $field = 'test';
         $query = new Match();
-        
+
         $fuzziness = "AUTO";
         $query->setFieldFuzziness($field, $fuzziness);
-        
+
         $parameters =  $query->getParam($field);
-        $this->assertEquals($fuzziness, $parameters['fuzziness']);      
-        
-        
+        $this->assertEquals($fuzziness, $parameters['fuzziness']);
+
         $fuzziness = 0.3;
         $query->setFieldFuzziness($field, $fuzziness);
-        
+
         $parameters =  $query->getParam($field);
-        $this->assertEquals($fuzziness, $parameters['fuzziness']);      
+        $this->assertEquals($fuzziness, $parameters['fuzziness']);
     }
 }

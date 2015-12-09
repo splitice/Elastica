@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica\Cluster;
+
 use Elastica\Client;
 use Elastica\Cluster\Health\Index;
 use Elastica\Request;
@@ -15,16 +16,12 @@ use Elastica\Request;
 class Health
 {
     /**
-     * Elastica client.
-     *
-     * @var \Elastica\Client Client object
+     * @var \Elastica\Client Client object.
      */
     protected $_client = null;
 
     /**
-     * The cluster health data.
-     *
-     * @var array
+     * @var array The cluster health data.
      */
     protected $_data = null;
 
@@ -63,7 +60,7 @@ class Health
     /**
      * Refreshes the health data for the cluster.
      *
-     * @return \Elastica\Cluster\Health
+     * @return $this
      */
     public function refresh()
     {

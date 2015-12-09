@@ -14,8 +14,8 @@ class IndexDocument extends AbstractDocument
     protected $_opType = self::OP_TYPE_INDEX;
 
     /**
-     * @param \Elastica\Document $document
-     * @return \Elastica\Bulk\Action\IndexDocument
+     * @param  \Elastica\Document $document
+     * @return $this
      */
     public function setDocument(Document $document)
     {
@@ -27,7 +27,7 @@ class IndexDocument extends AbstractDocument
     }
 
     /**
-     * @param \Elastica\AbstractUpdateAction $source
+     * @param  \Elastica\AbstractUpdateAction $source
      * @return array
      */
     protected function _getMetadata(AbstractUpdateAction $action)
@@ -45,6 +45,7 @@ class IndexDocument extends AbstractDocument
             'timestamp',
             'retry_on_conflict',
         );
+
         $metadata = $action->getOptions($params, true);
 
         return $metadata;

@@ -2,8 +2,6 @@
 
 namespace Elastica\Filter;
 
-use Elastica\Filter\AbstractFilter;
-
 /**
  * Geo polygon filter
  *
@@ -44,6 +42,7 @@ class GeoPolygon extends AbstractFilter
      * Converts filter to array
      *
      * @see \Elastica\Filter\AbstractFilter::toArray()
+     *
      * @return array
      */
     public function toArray()
@@ -51,9 +50,9 @@ class GeoPolygon extends AbstractFilter
         return array(
             'geo_polygon' => array(
                 $this->_key => array(
-                    'points' => $this->_points
+                    'points' => $this->_points,
                 ),
-            )
+            ),
         );
     }
 }

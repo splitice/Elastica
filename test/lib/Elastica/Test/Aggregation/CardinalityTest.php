@@ -2,7 +2,6 @@
 
 namespace Elastica\Test\Aggregation;
 
-
 use Elastica\Aggregation\Cardinality;
 use Elastica\Document;
 use Elastica\Query;
@@ -12,7 +11,7 @@ class CardinalityTest extends BaseAggregationTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_index = $this->_createIndex("cardinality");
+        $this->_index = $this->_createIndex();
         $docs = array(
             new Document("1", array("color" => "blue")),
             new Document("2", array("color" => "blue")),
@@ -35,4 +34,3 @@ class CardinalityTest extends BaseAggregationTest
         $this->assertEquals(3, $results['value']);
     }
 }
- 

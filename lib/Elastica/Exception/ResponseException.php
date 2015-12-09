@@ -15,15 +15,11 @@ use Elastica\Response;
 class ResponseException extends \RuntimeException implements ExceptionInterface
 {
     /**
-     * Request
-     *
      * @var \Elastica\Request Request object
      */
     protected $_request = null;
 
     /**
-     * Response
-     *
      * @var \Elastica\Response Response object
      */
     protected $_response = null;
@@ -31,7 +27,7 @@ class ResponseException extends \RuntimeException implements ExceptionInterface
     /**
      * Construct Exception
      *
-     * @param \Elastica\Request $request
+     * @param \Elastica\Request  $request
      * @param \Elastica\Response $response
      */
     public function __construct(Request $request, Response $response)
@@ -66,7 +62,8 @@ class ResponseException extends \RuntimeException implements ExceptionInterface
      *
      * @return ElasticsearchException
      */
-    public function getElasticsearchException() {
+    public function getElasticsearchException()
+    {
         $response = $this->getResponse();
         $transfer = $response->getTransferInfo();
         $code     = array_key_exists('http_code', $transfer) ? $transfer['http_code'] : 0;

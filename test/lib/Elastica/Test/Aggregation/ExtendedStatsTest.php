@@ -2,7 +2,6 @@
 
 namespace Elastica\Test\Aggregation;
 
-
 use Elastica\Aggregation\ExtendedStats;
 use Elastica\Document;
 use Elastica\Query;
@@ -12,7 +11,7 @@ class ExtendedStatsTest extends BaseAggregationTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_index = $this->_createIndex("extended_stats");
+        $this->_index = $this->_createIndex();
         $docs = array(
             new Document("1", array("price" => 5)),
             new Document("2", array("price" => 8)),
@@ -40,4 +39,3 @@ class ExtendedStatsTest extends BaseAggregationTest
         $this->assertTrue(array_key_exists('sum_of_squares', $results));
     }
 }
- 

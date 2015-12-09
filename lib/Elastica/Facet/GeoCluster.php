@@ -10,32 +10,38 @@ namespace Elastica\Facet;
  * @author Konstantin Nikiforov <konstantin.nikiforov@gmail.com>
  * @link https://github.com/zenobase/geocluster-facet
  */
-class GeoCluster extends AbstractFacet {
-
+class GeoCluster extends AbstractFacet
+{
     /**
-     * @param string $fieldName
+     * @param  string $fieldName
      * @return $this
      */
-    public function setField($fieldName) {
+    public function setField($fieldName)
+    {
         $this->setParam('field', $fieldName);
+
         return $this;
     }
 
     /**
-     * @param double $factor
+     * @param  double $factor
      * @return $this
      */
-    public function setFactor($factor){
+    public function setFactor($factor)
+    {
         $this->setParam('factor', $factor);
+
         return $this;
     }
 
     /**
-     * @param boolean $showIds
+     * @param  boolean $showIds
      * @return $this
      */
-    public function setShowIds($showIds) {
+    public function setShowIds($showIds)
+    {
         $this->setParam('showIds', $showIds);
+
         return $this;
     }
 
@@ -45,10 +51,13 @@ class GeoCluster extends AbstractFacet {
      *
      * @see \Elastica\Facet\AbstractFacet::toArray()
      * @throws \Elastica\Exception\InvalidException When the right fields haven't been set.
+     *
      * @return array
      */
-    public function toArray(){
-        $this->_setFacetParam ('geo_cluster', $this->_params);
+    public function toArray()
+    {
+        $this->_setFacetParam('geo_cluster', $this->_params);
+
         return parent::toArray();
     }
 }

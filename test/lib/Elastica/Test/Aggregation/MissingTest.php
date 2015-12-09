@@ -2,7 +2,6 @@
 
 namespace Elastica\Test\Aggregation;
 
-
 use Elastica\Aggregation\Missing;
 use Elastica\Document;
 use Elastica\Query;
@@ -12,7 +11,7 @@ class MissingTest extends BaseAggregationTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_index = $this->_createIndex('missing');
+        $this->_index = $this->_createIndex();
         $docs = array(
             new Document('1', array('price' => 5, "color" => "blue")),
             new Document('2', array('price' => 8, "color" => "blue")),
@@ -34,4 +33,3 @@ class MissingTest extends BaseAggregationTest
         $this->assertEquals(1, $results['doc_count']);
     }
 }
- 

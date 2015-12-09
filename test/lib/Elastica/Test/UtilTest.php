@@ -2,10 +2,10 @@
 
 namespace Elastica\Test;
 
-use Elastica\Util;
-use Elastica\Request;
 use Elastica\Connection;
+use Elastica\Request;
 use Elastica\Test\Base as BaseTest;
+use Elastica\Util;
 
 class UtilTest extends BaseTest
 {
@@ -25,14 +25,34 @@ class UtilTest extends BaseTest
             array('oh yeah!', 'oh yeah\\!'),
             // Seperate test below because phpunit seems to have some problems
             //array('\\+-&&||!(){}[]^"~*?:', '\\\\\\+\\-\\&&\\||\\!\\(\\)\\{\\}\\[\\]\\^\\"\\~\\*\\?\\:'),
-            array('some signs, can stay.', 'some signs, can stay.')
+            array('some signs, can stay.', 'some signs, can stay.'),
+        );
+    }
+
+    /**
+     * @dataProvider getReplaceBooleanWordsPairs
+     */
+    public function testReplaceBooleanWords($before, $after)
+    {
+        $this->assertEquals($after, Util::replaceBooleanWords($before));
+    }
+
+    public function getReplaceBooleanWordsPairs()
+    {
+        return array(
+            array('to be OR not to be', 'to be || not to be'),
+            array('ORIGINAL GIFTS', 'ORIGINAL GIFTS'),
+            array('Black AND White', 'Black && White'),
+            array('TIMBERLAND Men`s', 'TIMBERLAND Men`s'),
+            array('hello NOT kitty', 'hello !kitty'),
+            array('SEND NOTIFICATION', 'SEND NOTIFICATION'),
         );
     }
 
     public function testEscapeTermSpecialCharacters()
     {
-        $before = '\\+-&&||!(){}[]^"~*?:/';
-        $after = '\\\\\\+\\-\\&&\\||\\!\\(\\)\\{\\}\\[\\]\\^\\"\\~\\*\\?\\:\\/';
+        $before = '\\+-&&||!(){}[]^"~*?:/<>';
+        $after = '\\\\\\+\\-\\&&\\||\\!\\(\\)\\{\\}\\[\\]\\^\\"\\~\\*\\?\\:\\/\<\>';
 
         $this->assertEquals(Util::escapeTerm($before), $after);
     }
@@ -72,6 +92,29 @@ class UtilTest extends BaseTest
 
         $expected = 'curl -XPOST \'http://localhost:9200/test?no=params\' -d \'{"key":"value"}\'';
         $this->assertEquals($expected, $curlCommand);
+    }
 
+    public function testConvertDateTimeObjectWithTimezone()
+    {
+        $dateTimeObject = new \DateTime();
+        $timestamp = $dateTimeObject->getTimestamp();
+
+        $convertedString = Util::convertDateTimeObject($dateTimeObject);
+
+        $date = date('Y-m-d\TH:i:sP', $timestamp);
+
+        $this->assertEquals($convertedString, $date);
+    }
+
+    public function testConvertDateTimeObjectWithoutTimezone()
+    {
+        $dateTimeObject = new \DateTime();
+        $timestamp = $dateTimeObject->getTimestamp();
+
+        $convertedString = Util::convertDateTimeObject($dateTimeObject, false);
+
+        $date = date('Y-m-d\TH:i:s\Z', $timestamp);
+
+        $this->assertEquals($convertedString, $date);
     }
 }

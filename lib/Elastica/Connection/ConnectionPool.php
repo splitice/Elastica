@@ -15,56 +15,56 @@ use Exception;
 class ConnectionPool
 {
     /**
-     * Connections array
-     * 
-     * @var array|\Elastica\Connection[]
+     * @var array|\Elastica\Connection[] Connections array
      */
     protected $_connections;
-    
+
     /**
-     * Strategy for connection
-     * 
-     * @var  \Elastica\Connection\Strategy\StrategyInterface
+     * @var \Elastica\Connection\Strategy\StrategyInterface Strategy for connection
      */
     protected $_strategy;
-    
+
     /**
-     * Callback function called on connection fail
-     * 
-     * @var callback
+     * @var callback Function called on connection fail
      */
     protected $_callback;
-    
+
     /**
-     * @param array $connections
+     * @param array                                           $connections
      * @param \Elastica\Connection\Strategy\StrategyInterface $strategy
-     * @param callback $callback
+     * @param callback                                        $callback
      */
     public function __construct(array $connections, StrategyInterface $strategy, $callback = null)
     {
         $this->_connections = $connections;
-        
+
         $this->_strategy = $strategy;
-        
+
         $this->_callback = $callback;
     }
-    
+
     /**
-     * @param \Elastica\Connection $connection
+     * @param  \Elastica\Connection $connection
+     * @return $this
      */
     public function addConnection(Connection $connection)
     {
         $this->_connections[] = $connection;
+
+        return $this;
     }
-    
+
     /**
-     * @param array|\Elastica\Connection[] $connections
+     * @param  array|\Elastica\Connection[] $connections
+     * @return $this
      */
     public function setConnections(array $connections)
     {
         $this->_connections = $connections;
+
+        return $this;
     }
-    
+
     /**
      * @return boolean
      */
@@ -75,10 +75,10 @@ class ConnectionPool
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * @return array
      */
@@ -86,32 +86,32 @@ class ConnectionPool
     {
         return $this->_connections;
     }
-    
+
     /**
-     * @return \Elastica\Connection
      * @throws \Elastica\Exception\ClientException
+     *
+     * @return \Elastica\Connection
      */
     public function getConnection()
     {
         return $this->_strategy->getConnection($this->getConnections());
     }
-    
+
     /**
      * @param \Elastica\Connection $connection
-     * @param \Exception $e
-     * @param Client $client
+     * @param \Exception           $e
+     * @param Client               $client
      */
     public function onFail(Connection $connection, Exception $e, Client $client)
     {
         $connection->setEnabled(false);
-        
+
         if ($this->_callback) {
             call_user_func($this->_callback, $connection, $e, $client);
         }
     }
-    
+
     /**
-     * 
      * @return \Elastica\Connection\Strategy\StrategyInterface
      */
     public function getStrategy()
